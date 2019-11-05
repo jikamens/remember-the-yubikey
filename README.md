@@ -202,7 +202,7 @@ that computer!
 At this point you can tweak the Tasker profiles and tasks as desired
 to behave differently, if you wish.
 
-# Can I use this for something other than a YubiKey?
+## Can I use this for something other than a YubiKey?
 
 With minimal modifications, you should be able to use this code for
 any removable device, USB or otherwise, that generates `udev` events
@@ -253,8 +253,6 @@ General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
-
----
 
 [1]: https://blog.kamens.us/2018/08/15/how-i-remember-my-yubikey/
 [2]: https://blog.kamens.us/2019/02/18/how-i-remember-my-yubikey-take-two/#unreliable
