@@ -19,21 +19,30 @@
 MESSAGE_SERVICE=pushover
 # Put your Pushover API token and user key on the first two lines of this file
 # if using Pushover
-PUSHOVER_KEY_FILE=/root/.pushover_keys
+PUSHOVER_KEY_FILE=~/.pushover_keys
 # Put your IFTTT maker key in this file if using IFTTT
-IFTTT_KEY_FILE=/root/.ifttt_maker_key
+IFTTT_KEY_FILE=~/.ifttt_maker_key
 
-FLAG=/var/run/yubikey-watcher
+FLAG=~/.yubikey-watcher
 MIN_NOTIF_GAP=5
 NUM_NOTIFICATIONS=2
 
 exit_status=0
+OS=$(uname)
 
 trap "rm -f \"$FLAG.lock\"" EXIT
-lockfile -1 -l 15 "$FLAG.lock"
+if [ "$OS" = "Darwin" ]; then
+    shlock -p $$ -f "$FLAG.lock"
+else
+    lockfile -1 -l 15 "$FLAG.lock"
+fi
 
 check_yubikey() {
-    usb-devices 2>/dev/null | grep -q -s -i -w yubikey
+    if [ "$OS" = "Darwin" ]; then
+	ioreg -p IOUSB 2>/dev/null | grep -q -s -i -w yubikey
+    else
+	usb-devices 2>/dev/null | grep -q -s -i -w yubikey
+    fi
 }
 
 next_state() {
@@ -141,5 +150,14 @@ doit() {
 while doit; do
     :
 done
+
+# On Darwin, there's no event for a device being unplugged, so we need to
+# stay running until it's unplugged so we can detect it.
+if [ "$OS" = "Darwin" ]; then
+    while check_yubikey; do
+	doit || :
+	sleep 5
+    done
+fi
 
 exit $exit_status

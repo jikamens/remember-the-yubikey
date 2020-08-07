@@ -131,33 +131,44 @@ of an outage when you plug in or unplug your YubiKey.
 2. Copy the script to `/usr/local/bin` and make sure it's executable.
 
 3. If you're using IFTTT, then create the file `/root/.ifttt_maker_key`
-   and put the maker key which you saved above into it.
+   (Linux) or `~/.ifttt_maker_key` (Mac) and put the maker key which
+   you saved above into it.
 
-4. If you're using Pushover, then create the file `/root/.pushover_keys`
-   and put your API token and user key (in that order) on the first
-   two lines of the file.
+4. If you're using Pushover, then create the file
+   `/root/.pushover_keys` (Linux) or `~/.pushover_keys` (Mac) and put
+   your API token and user key (in that order) on the first two lines
+   of the file.
 
-5. Plug in your YubiKey and then run `/usr/local/bin/yubikey-monitor.sh`
-   (as root). You should get two "YubiKey is plugged in" notifications
-   on your phone if you're using just IFTTT or just Pushover, or four
-   notification if you're using both. The notifications should come
-   within ten seconds or so if you're using Pushover; they could take
-   several minutes with IFTTt.
+5. Plug in your YubiKey and then run
+   `/usr/local/bin/yubikey-monitor.sh` (as root on Linux, or as
+   yourself on Mac). You should get two "YubiKey is plugged in"
+   notifications on your phone if you're using just IFTTT or just
+   Pushover, or four notification if you're using both. The
+   notifications should come within ten seconds or so if you're using
+   Pushover; they could take several minutes with IFTTT. On Mac, the
+   script will continue running until you unplug the YubiKey in the
+   next step.
 
-6. Unplug your YubiKey and run the script again and you should get
-   either two or four "YubiKey is not plugged in" notifications.
+6. Unplug your YubiKey (and on Linux run the script again) and you
+   should get either two or four "YubiKey is not plugged in"
+   notifications.
 
-7. Copy `50-yubikey.rules` to `/etc/udev/rules.d` and run `udevadm
-   control --reload`.
+7. (Linux) Copy `linux/50-yubikey.rules` to `/etc/udev/rules.d` and
+   run `udevadm control --reload`.
 
-8. Plug in your YubiKey and you should get the notifications without
-   running the script by hand, since the udev rule should run it
-   automatically.
+8. (Mac) Copy `mac/com.jik.RememberTheYubikey.plist` into
+   `~/Library/LaunchAgents` and run `launchctl load
+   ~/Library/LaunchAgents/com.jik.RememberTheYubikey.plist`.
 
-9. Ditto when you unplug the YubiKey.
+9. Plug in your YubiKey and you should get the notifications without
+   running the script by hand, since the udev / launchd rule should
+   run it automatically.
 
-10. Copy `yubikey-monitor.service` and `yubikey-monitor.timer` to
-   `/etc/systemd/system` and run `systemctl daemon-reload`.
+10. Ditto when you unplug the YubiKey.
+
+11. (Linux) Copy `linux/yubikey-monitor.service` and
+   `linux/yubikey-monitor.timer` to `/etc/systemd/system` and run
+   `systemctl daemon-reload`.
 
 You can deploy the tool as described above on as many computers as you
 would like. You won't get notified about walking away from a computer
