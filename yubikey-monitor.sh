@@ -158,6 +158,7 @@ if [ "$OS" = "Darwin" ]; then
 	doit || :
 	sleep 5
     done
+    doit
 fi
 
 exit $exit_status
