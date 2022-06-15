@@ -39,7 +39,7 @@ fi
 
 check_yubikey() {
     if [ "$OS" = "Darwin" ]; then
-	ioreg -p IOUSB 2>/dev/null | grep -q -s -i -w yubikey
+	ioreg -w 0 2>/dev/null | grep -q -s -i -w yubikey
     else
 	lsusb 2>/dev/null | grep -q -s -i -w yubikey
     fi
