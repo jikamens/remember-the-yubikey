@@ -93,7 +93,11 @@ doit() {
     if [ "$LAST_TIME" ]; then
         DELTA=$(($(date +%s) - LAST_TIME))
         REMAINING=$((MIN_NOTIF_GAP - DELTA))
-        if [ $REMAINING -gt 0 ]; then
+        # If flag file gets corrupted because system clock gets set in the
+        # future when we save the flag file and then gets set back to the
+        # correct time, we don't want to sleep for a long time, hence
+        # $DELTA -ge 0.
+        if [ $DELTA -ge 0 -a $REMAINING -gt 0 ]; then
             echo Delaying notification for $REMAINING seconds
             sleep $REMAINING
             doit
